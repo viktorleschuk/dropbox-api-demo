@@ -5,6 +5,10 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\Resource;
 use Illuminate\Support\Arr;
 
+/**
+ * Class File
+ * @package App\Http\Resources
+ */
 class File extends Resource
 {
     /**

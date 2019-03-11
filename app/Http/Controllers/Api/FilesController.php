@@ -31,7 +31,7 @@ class FilesController extends ApiController
     }
 
     /**
-     * Get preview link for the file (available only for 4 hours)
+     * Gets preview link for the file (link valid only for 4 hours)
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse

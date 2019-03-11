@@ -44,6 +44,7 @@ const app = new Vue({
 
     methods: {
 
+        
         fetchFiles() {
             this.loading = true;
             axios.get('api/files').then(result => {
