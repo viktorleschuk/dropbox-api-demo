@@ -8,7 +8,7 @@
             <div class="col-lg-2 col-md-3 col-sm-4 mb-4" v-for="file in files" @click="openPreviewModal(file)">
                 <div class="h-100">
                     <a href="#"><img class="card-img-top" :src="'/images/icons/' + getIcon(file) + '.png'" alt=""></a>
-                    <a href="#">@{{ file.filename }}</a>
+                    <a href="#" style="word-break: break-word;">@{{ file.filename }}</a>
                     <a href="#">(@{{ file.extension }})</a>
                 </div>
             </div>
