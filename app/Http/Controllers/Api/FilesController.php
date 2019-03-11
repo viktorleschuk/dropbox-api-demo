@@ -92,6 +92,10 @@ class FilesController extends ApiController
             return $this->returnValidationFailure('Validation failure', $validator->errors());
         }
 
+        if (! Storage::has($request->get('path'))) {
+            return $this->returnNotFoundFailure('File not found');
+        }
+
         Storage::delete($request->get('path'));
 
         return response()->json();

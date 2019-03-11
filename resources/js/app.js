@@ -44,15 +44,20 @@ const app = new Vue({
 
     methods: {
 
-        
+
         fetchFiles() {
             this.loading = true;
             axios.get('api/files').then(result => {
                 this.loading = false;
                 this.files = result.data.data;
-                console.log(this.files);
             }).catch(error => {
-                console.log(error);
+                console.log(error.response);
+                $.toast({
+                    title: 'Error',
+                    content: error.response.data.message,
+                    type: 'error',
+                    delay: 3000
+                });
                 this.loading = false;
             });
 
@@ -71,7 +76,13 @@ const app = new Vue({
                 this.previewLoading = false;
                 this.previewLink = result.data.path;
             }).catch(error => {
-                console.log(error);
+                console.log(error.response);
+                $.toast({
+                    title: 'Error',
+                    content: error.response.data.message,
+                    type: 'error',
+                    delay: 3000
+                });
                 this.previewLoading = false;
             });
             $('#fileModal')
@@ -97,9 +108,11 @@ const app = new Vue({
 
             this.formData = new FormData();
             this.formData.append('file', this.attachment);
+            this.loading = true;
 
             axios.post('api/files', this.formData, {headers: {'Content-Type': 'multipart/form-data'}})
                 .then(response => {
+                    this.loading = false;
                     $.toast({
                         title: 'Notice!',
                         content: 'File successfully added.',
@@ -111,7 +124,14 @@ const app = new Vue({
                 })
                 .catch(error => {
 
-                    console.log(error);
+                    this.loading = false;
+                    console.log(error.response);
+                    $.toast({
+                        title: 'Error',
+                        content: error.response.data.message,
+                        type: 'error',
+                        delay: 3000
+                    });
                 });
         },
 
@@ -130,7 +150,13 @@ const app = new Vue({
                 })
                 .catch(error => {
 
-                    console.log(error);
+                    $.toast({
+                        title: 'Error',
+                        content: error.response.data.message,
+                        type: 'error',
+                        delay: 3000
+                    });
+                    console.log(error.response);
                 });
         },
 
