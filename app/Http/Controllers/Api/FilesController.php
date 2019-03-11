@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
-use League\Flysystem\Config;
 use League\Flysystem\Util;
 
 /**
@@ -19,6 +18,8 @@ use League\Flysystem\Util;
 class FilesController extends ApiController
 {
     /**
+     * Returns list of files
+     *
      * @param Request $request
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
@@ -30,6 +31,8 @@ class FilesController extends ApiController
     }
 
     /**
+     * Get preview link for the file (available only for 4 hours)
+     *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -51,6 +54,8 @@ class FilesController extends ApiController
     }
 
     /**
+     * Uploads new file
+     *
      * @param Request $request
      * @return File|\Illuminate\Http\JsonResponse
      */
@@ -71,6 +76,12 @@ class FilesController extends ApiController
         return new File($metadata);
     }
 
+    /**
+     * Deletes file by path(in query)
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function delete(Request $request)
     {
         $validator = Validator::make($request->all(), [
