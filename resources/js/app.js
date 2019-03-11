@@ -1,4 +1,3 @@
-
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -29,5 +28,128 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
  */
 
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+
+    data: {
+        files: {},
+        file: {},
+
+        previewLink: null,
+
+        loading: false,
+        previewLoading: false,
+
+        availableFormats: ['ai', 'avi', 'css', 'csv', 'dbf', 'doc', 'dwg', 'exe', 'fla', 'html', 'iso', 'jpeg', 'jpg', 'js', 'json', 'mp3', 'mp4', 'pdf', 'png', 'ppt', 'psd', 'rtf', 'svg', 'txt', 'xls', 'sml', 'zip']
+    },
+
+    methods: {
+
+        fetchFiles() {
+            this.loading = true;
+            axios.get('api/files').then(result => {
+                this.loading = false;
+                this.files = result.data.data;
+                console.log(this.files);
+            }).catch(error => {
+                console.log(error);
+                this.loading = false;
+            });
+
+        },
+
+        getIcon(file) {
+
+            return this.availableFormats.indexOf(file.extension) > -1 ? file.extension : 'default';
+        },
+
+        openPreviewModal(file) {
+
+            this.file = file;
+            this.previewLoading = true;
+            axios.get('api/files/preview', {params: {path: file.path}}).then(result => {
+                this.previewLoading = false;
+                this.previewLink = result.data.path;
+            }).catch(error => {
+                console.log(error);
+                this.previewLoading = false;
+            });
+            $('#fileModal')
+                .modal('show')
+                .on('hidden.bs.modal', (e) => {
+
+                    this.previewLink = null;
+                });
+        },
+
+        openFileSelector() {
+
+            $('.file-input')[0].click();
+        },
+
+        addFile() {
+
+            this.attachment = this.$refs.file.files[0];
+            this.submitForm();
+        },
+
+        submitForm() {
+
+            this.formData = new FormData();
+            this.formData.append('file', this.attachment);
+
+            axios.post('api/files', this.formData, {headers: {'Content-Type': 'multipart/form-data'}})
+                .then(response => {
+                    $.toast({
+                        title: 'Notice!',
+                        content: 'File successfully added.',
+                        type: 'info',
+                        delay: 3000
+                    });
+
+                    this.files.push(response.data.data);
+                })
+                .catch(error => {
+
+                    console.log(error);
+                });
+        },
+
+        deleteFile(file) {
+
+            axios.delete('api/files', {params: {path: file.path}})
+                .then(response => {
+                    $.toast({
+                        title: 'Notice!',
+                        content: 'File successfully deleted.',
+                        type: 'info',
+                        delay: 3000
+                    });
+                    $('#fileModal').modal('hide');
+                    this.files.splice(this.files.indexOf(file), 1);
+                })
+                .catch(error => {
+
+                    console.log(error);
+                });
+        },
+
+        isVideo() {
+            const videoExtensions = ['mov', 'mp4'];
+            return videoExtensions.indexOf(this.file.extension) > -1;
+        },
+
+        isPhoto() {
+            const photoExtensions = ['jpeg', 'jpg', 'png'];
+            return photoExtensions.indexOf(this.file.extension) > -1;
+        },
+
+        isElse() {
+
+            return ! isVideo && ! isPhoto;
+        }
+    },
+    mounted() {
+        // console.log('mounted');
+        this.fetchFiles();
+    }
 });

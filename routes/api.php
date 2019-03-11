@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::get('/files', 'FilesController@index');
+Route::post('/files', 'FilesController@store');
+Route::delete('/files', 'FilesController@delete');
+Route::get('/files/preview', 'FilesController@preview');

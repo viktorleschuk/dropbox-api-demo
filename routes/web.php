@@ -13,6 +13,5 @@
 
 Route::get('/', function () {
 
-//    dd(\Illuminate\Support\Facades\Storage::allFiles());
-    return view('welcome');
+    return view('pages.index');
 });
